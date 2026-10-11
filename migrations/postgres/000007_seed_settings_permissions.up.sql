@@ -1,0 +1,12 @@
+-- Grant settings administration through the existing RBAC model.
+INSERT INTO permissions(id,code,name,module) VALUES
+('00000000-0000-4000-8001-000000000012','SETTING.READ','Read settings','SETTING'),
+('00000000-0000-4000-8001-000000000013','SETTING.CREATE','Create settings','SETTING'),
+('00000000-0000-4000-8001-000000000014','SETTING.UPDATE','Update settings','SETTING'),
+('00000000-0000-4000-8001-000000000015','SETTING.DELETE','Delete settings','SETTING')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO role_permissions(role_id,permission_id)
+SELECT r.id,p.id FROM roles r CROSS JOIN permissions p
+WHERE r.code='ADMIN' AND p.code IN ('SETTING.READ','SETTING.CREATE','SETTING.UPDATE','SETTING.DELETE')
+ON CONFLICT DO NOTHING;
